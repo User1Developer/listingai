@@ -10,7 +10,7 @@ const PROPERTY_TYPES = [
   { id: "fixer", label: "Fixer / Opportunity", icon: "🔨", desc: "Frames potential, location & land value" },
 ];
 
-const TONES = ["Professional", "Luxury", "Friendly"];
+const TONES = ["Professional", "Premium", "Personal"];
 
 const TABS = [
   { key: "mls", label: "MLS Listing", icon: "🏠" },
@@ -23,8 +23,8 @@ const TABS = [
 const getSystemPrompt = (propertyType, tone) => {
   const toneGuide = {
     Professional: "authoritative, precise, and confident — like a top-producing agent who knows their market",
-    Luxury: "refined, aspirational, and evocative — paint a lifestyle, not just a property",
-    Friendly: "warm, conversational, and inviting — like a trusted friend describing a home they love",
+    Premium: "refined, aspirational, and evocative — paint a lifestyle, not just a property",
+    Personal: "warm, conversational, and inviting — like a trusted friend describing a home they love",
   }[tone];
 
   const typeGuide = {
