@@ -105,26 +105,47 @@ const CopyBtn = ({ text }) => {
 const PasswordGate = ({ onUnlock }) => {
   const [pw, setPw] = useState("");
   const [error, setError] = useState(false);
+  const [focused, setFocused] = useState(false);
+
   const attempt = () => {
     if (pw === ACCESS_CODE) { onUnlock(); }
     else { setError(true); setTimeout(() => setError(false), 2000); setPw(""); }
   };
+
   return (
     <div className="gate">
+      <div className="gate-bg-orb" />
+      <div className="gate-bg-orb2" />
       <div className="gate-inner">
+        <div className="gate-eyebrow">EARLY ACCESS</div>
         <div className="gate-logo">Listing<em>AI</em></div>
-        <div className="gate-sub">Real Estate Copy Platform</div>
-        <div className="gate-form">
-          <input type="password" className={`gate-input ${error ? "gate-error" : ""}`}
-            placeholder={error ? "Incorrect code" : "Enter access code"}
-            value={pw} onChange={e => setPw(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && attempt()} autoFocus />
-          <button className="gate-btn" onClick={attempt}>Enter →</button>
+        <div className="gate-tagline">Real estate copy that converts.</div>
+        <div className="gate-divider" />
+        <div className="gate-label">Enter your access code</div>
+        <div className={`gate-input-wrap ${focused ? "focused" : ""} ${error ? "errored" : ""}`}>
+          <input
+            type="password"
+            className="gate-input"
+            placeholder="••••••••••"
+            value={pw}
+            onChange={e => setPw(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && attempt()}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            autoFocus
+          />
         </div>
+        {error && <div className="gate-error-msg">Incorrect access code</div>}
+        <button className="gate-btn" onClick={attempt}>
+          <span>Enter Platform</span>
+          <span className="gate-btn-arrow">→</span>
+        </button>
+        <div className="gate-footer">Invite only · For real estate professionals</div>
       </div>
     </div>
   );
 };
+
 
 export default function ListingAI() {
   const [unlocked, setUnlocked] = useState(false);
@@ -199,18 +220,28 @@ Return this exact JSON:
           --error: #c0604a;
         }
         .app { min-height: 100vh; background: var(--bg); font-family: 'Outfit', sans-serif; color: var(--text); background-image: radial-gradient(ellipse at 15% 0%, rgba(201,168,76,0.07) 0%, transparent 55%), radial-gradient(ellipse at 85% 100%, rgba(201,168,76,0.04) 0%, transparent 45%); }
-        .gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); background-image: radial-gradient(ellipse at 50% 40%, rgba(201,168,76,0.08) 0%, transparent 60%); }
-        .gate-inner { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 48px; }
-        .gate-logo { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 700; color: var(--text); letter-spacing: -2px; line-height: 1; }
+        .gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); position: relative; overflow: hidden; }
+        .gate-bg-orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%); top: -100px; left: -100px; pointer-events: none; }
+        .gate-bg-orb2 { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%); bottom: -50px; right: -50px; pointer-events: none; }
+        .gate-inner { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 56px 48px; background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; width: 380px; position: relative; box-shadow: 0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.05); }
+        .gate-eyebrow { font-size: 10px; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; opacity: 0.8; }
+        .gate-logo { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 700; color: var(--text); letter-spacing: -2px; line-height: 1; margin-bottom: 10px; }
         .gate-logo em { color: var(--gold); font-style: normal; }
-        .gate-sub { font-size: 11px; font-weight: 300; color: var(--muted); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 24px; }
-        .gate-form { display: flex; flex-direction: column; gap: 12px; width: 280px; }
-        .gate-input { font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--text); background: var(--surface); border: 1px solid var(--border2); border-radius: 4px; padding: 13px 16px; outline: none; text-align: center; letter-spacing: 2px; transition: border-color 0.15s; width: 100%; }
-        .gate-input:focus { border-color: var(--gold-dim); }
-        .gate-input.gate-error { border-color: var(--error); color: var(--error); }
-        .gate-input::placeholder { letter-spacing: 1px; color: var(--muted); }
-        .gate-btn { padding: 13px; background: var(--gold); color: var(--bg); font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: all 0.15s; }
-        .gate-btn:hover { background: var(--gold-light); }
+        .gate-tagline { font-size: 13px; font-weight: 300; color: var(--text2); letter-spacing: 0.5px; margin-bottom: 28px; }
+        .gate-divider { width: 40px; height: 1px; background: var(--gold-dim); margin-bottom: 28px; opacity: 0.5; }
+        .gate-label { font-size: 10px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; align-self: flex-start; }
+        .gate-input-wrap { width: 100%; border: 1px solid var(--border2); border-radius: 4px; background: var(--bg); transition: border-color 0.2s, box-shadow 0.2s; margin-bottom: 8px; }
+        .gate-input-wrap.focused { border-color: var(--gold-dim); box-shadow: 0 0 0 3px var(--gold-glow); }
+        .gate-input-wrap.errored { border-color: var(--error); box-shadow: 0 0 0 3px rgba(192,96,74,0.1); animation: shake 0.3s ease; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        .gate-input { font-family: 'Outfit', sans-serif; font-size: 20px; letter-spacing: 6px; color: var(--text); background: transparent; border: none; padding: 14px 18px; outline: none; width: 100%; text-align: center; }
+        .gate-input::placeholder { color: var(--dim); letter-spacing: 4px; font-size: 16px; }
+        .gate-error-msg { font-size: 11px; color: var(--error); letter-spacing: 0.5px; margin-bottom: 4px; height: 16px; }
+        .gate-btn { width: 100%; margin-top: 16px; padding: 14px; background: var(--gold); color: var(--bg); font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .gate-btn:hover { background: var(--gold-light); box-shadow: 0 6px 24px rgba(201,168,76,0.25); transform: translateY(-1px); }
+        .gate-btn-arrow { font-size: 16px; transition: transform 0.2s; }
+        .gate-btn:hover .gate-btn-arrow { transform: translateX(4px); }
+        .gate-footer { margin-top: 20px; font-size: 10px; color: var(--dim); letter-spacing: 2px; text-transform: uppercase; }
         .header { padding: 28px 48px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
         .logo { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 700; color: var(--text); letter-spacing: -1px; line-height: 1; }
         .logo em { color: var(--gold); font-style: normal; }
